@@ -50,7 +50,6 @@
         $dbpotongan = DB::table('potongans')->get();
         $dbpendapatan = DB::table('pendapatans')->get();
         $dbDatapotongan = DB::table('data_potongans')->get();
-        $dbgajibersih = DB::table('gaji_bersihs')->get();
         $dblembur = DB::table('lemburs')->get();
         $karyawans = DB::table('karyawans')->get();
     @endphp
