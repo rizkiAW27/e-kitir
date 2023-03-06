@@ -21,5 +21,6 @@ class Karyawan extends Model
         'nama_bank',
         'norek',
         'namaPem_bank',
+        'status_ttd',
     ];
 }

@@ -131,44 +131,45 @@
                                     @endif
                                 @endforeach
                                 @foreach ($pendapatans as $pendapatan)
-                                    @foreach ($gajis as $gaji)
-                                    <tr>
-                                        @if ($pendapatan->kode_tunjangan == $gaji->kode && $id_karyawan == $pendapatan->id_karyawan && $pendapatan->status == "On")
-                                            @if ($pendapatan->nilai_pendapatan >= 15)
-                                                @php
-                                                    $total += $pendapatan->nilai_pendapatan;
-                                                    $jumlah = $total + $karyawan->gaji_pokok;
-                                                @endphp
+                                    @if ($karyawan->id_karyawan == $pendapatan->id_karyawan)
+                                        @foreach ($gajis as $gaji)
+                                        <tr>
+                                            @if ($pendapatan->id_tunjangan == $gaji->id && $pendapatan->status == "On" && $pendapatan->nilai_pendapatan > 0)
+                                                @if ($pendapatan->nilai_pendapatan >= 15 && $pendapatan->nilai_pendapatan > 0)
+                                                    @php
+                                                        $total += $pendapatan->nilai_pendapatan;
+                                                        $jumlah = $total + $karyawan->gaji_pokok;
+                                                    @endphp
+                                                @endif
+                                                @if ($gaji->jenis == "Tunjangan Tetap" && $pendapatan->nilai_pendapatan > 0)
+                                                    @php
+                                                        $pendapatanTun += $pendapatan->nilai_pendapatan;
+                                                        $jumlahpendapatan = $pendapatanTun + $karyawan->gaji_pokok;
+                                                        $totalLembur = $jamLembur1 + $jamLembur2;
+                                                        $upahLembur = floor(($jumlahpendapatan * $totalLembur) / 173);
+                                                        $hasil_rupiah2 = number_format($upahLembur,0,',','.');
+                                                    @endphp
+                                                @endif
+                                                @if ($gaji->jenis == "Karyawan")
+                                                @elseif ($pendapatan->nilai_pendapatan <= 15 && $pendapatan->nilai_pendapatan > 0)
+                                                    @php
+                                                        $hasil = ($jumlahpendapatan * $pendapatan->nilai_pendapatan) / 100;
+                                                        $hasil_rupiah = number_format($hasil,0,',','.');
+                                                        $nTunjangan += $hasil;
+                                                    @endphp
+                                                    <td>{{ $gaji->nama_pendapatan }} ({{ $pendapatan->nilai_pendapatan }}% {{ $gaji->jenis }})</td>
+                                                    <td>Rp. {{ $hasil_rupiah }}</td>
+                                                @else
+                                                    <td>{{ $gaji->nama_pendapatan }}</td>
+                                                    @php 
+                                                        $hasil_rupiah1 = number_format($pendapatan->nilai_pendapatan,0,',','.');
+                                                    @endphp
+                                                    <td>Rp. {{ $hasil_rupiah1 }}</td>
+                                                @endif            
                                             @endif
-                                            @if ($gaji->jenis == "Tunjangan Tetap")
-                                                @php
-                                                    $pendapatanTun += $pendapatan->nilai_pendapatan;
-                                                    $jumlahpendapatan = $pendapatanTun + $karyawan->gaji_pokok;
-                                                    $totalLembur = $jamLembur1 + $jamLembur2;
-                                                    $upahLembur = floor(($jumlahpendapatan * $totalLembur) / 173);
-                                                    $hasil_rupiah2 = number_format($upahLembur,0,',','.');
-                                                @endphp
-                                            @endif
-                                            @if ($gaji->jenis == "Karyawan")
-                                            @elseif ($pendapatan->nilai_pendapatan <= 15)
-                                                @php
-                                                    $hasil = ($jumlahpendapatan * $pendapatan->nilai_pendapatan) / 100;
-                                                    $hasil_rupiah = number_format($hasil,0,',','.');
-                                                    $nTunjangan += $hasil;
-                                                @endphp
-                                                <td>{{ $gaji->nama_pendapatan }} ({{ $pendapatan->nilai_pendapatan }}% {{ $gaji->jenis }})</td>
-                                                <td>Rp. {{ $hasil_rupiah }}</td>
-                                            @else
-                                                <td>{{ $gaji->nama_pendapatan }}</td>
-                                                @php 
-                                                    $hasil_rupiah1 = number_format($pendapatan->nilai_pendapatan,0,',','.');
-                                                @endphp
-                                                <td>Rp. {{ $hasil_rupiah1 }}</td>
-                                            @endif
-                                                
-                                        @endif
-                                    </tr>
-                                    @endforeach
+                                        </tr>
+                                        @endforeach
+                                    @endif
                                 @endforeach
                                 @if ($upahLembur == 0)
                                 @else
@@ -195,12 +196,14 @@
                                     $id_karyawan = $karyawan->id_karyawan;
                                     $nilaiPotongan = 0;
                                     $nilaiPot = 0;
+                                    $koreksi = 0;
+                                    $nilaikoreksi = 0;
                                     $pots = DB::table('potongans')->get();
                                 @endphp
                                 @foreach ($pots as $pot)
-                                    @if ($pot->jenis == 'Wajib')
+                                    @if ($pot->jenis == 'Wajib' || $pot->jenis == 'Tidak Wajib')
                                         <tr>
-                                            @if ($id_karyawan == $pot->id_karyawan)
+                                            @if ($id_karyawan == $pot->id_karyawan && $pot->nilai_potongan > 0)
                                                 <td>{{ $pot->nama_potongan }}</td>
                                                 @php 
                                                     $hasil_rupiah4 = number_format($pot->nilai_potongan,0,',','.');
@@ -237,7 +240,7 @@
                                 @foreach ($pendapatans as $pendapatan)
                                     @foreach ($gajis as $gaji)
                                     <tr>
-                                        @if ($pendapatan->kode_tunjangan == $gaji->kode && $id_karyawan == $pendapatan->id_karyawan && $pendapatan->status == "On")
+                                        @if ($pendapatan->id_tunjangan == $gaji->id && $id_karyawan == $pendapatan->id_karyawan && $pendapatan->status == "On" && $pendapatan->nilai_pendapatan > 0)
                                             
                                             @if ($pendapatan->nilai_pendapatan >= 15)
                                                 @php
@@ -251,13 +254,23 @@
                                                     $hasil_rupiah7 = number_format($hasil,0,',','.');
                                                     $nilaiTun += $hasil;
                                                 @endphp
-                                            <td>{{ $gaji->nama_pendapatan }} ({{ $pendapatan->nilai_pendapatan }}% {{ $gaji->jenis }})</td>
-                                            <td>Rp. {{ $hasil_rupiah7 }}</td>
+                                                <td>{{ $gaji->nama_pendapatan }} ({{ $pendapatan->nilai_pendapatan }}% {{ $gaji->jenis }})</td>
+                                                <td>Rp. {{ $hasil_rupiah7 }}</td>
                                             @endif
+                                            
+                                        @endif
+                                        @if ($pendapatan->id_tunjangan == $gaji->id && $id_karyawan == $pendapatan->id_karyawan && $pendapatan->status == "On" && $pendapatan->nilai_pendapatan < 0)
+                                            @php
+                                                $koreksi = $pendapatan->nilai_pendapatan;
+                                                $nilaikoreksi = number_format($koreksi,0,',','.');
+                                            @endphp
+                                            <td>{{ $gaji->nama_pendapatan }}</td>
+                                            <td>Rp. {{ $nilaikoreksi }}</td>
                                         @endif
                                     </tr>
                                     @endforeach
                                 @endforeach
+
                             </tbody>
                         </table>
                     </div>
@@ -304,7 +317,7 @@
                             </thead>
                                 @if ($nilaiPotongan == 0)
                                     @php
-                                        $totalPotongan = $nilaiPot + $nilaiTun;
+                                        $totalPotongan = $nilaiPot + $nilaiTun - $koreksi;
                                         $hasil_rupiah10 = number_format($totalPotongan,0,',','.');
                                     @endphp
                                 @else

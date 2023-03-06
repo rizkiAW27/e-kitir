@@ -28,7 +28,6 @@
                                 <th scope="col">ID Karyawan</th>
                                 <th scope="col">Nama Karyawan</th>
                                 <th scope="col">Kode Tunjangan</th>
-                                <th scope="col">Nama Tunjangan</th>
                                 <th scope="col">Nilai</th>
                                 <th scope="col">Status</th>
                                 <th scope="col">Aksi</th>
@@ -48,17 +47,18 @@
                                     <td>{{ $pendapatan->id_karyawan }}</td>
                                     <td>{{ $pendapatan->nama }}</td>
                                     <td>{{ $pendapatan->kode_tunjangan }}</td>
-                                    <td>{{ $pendapatan->nama_pendapatan }}</td>
                                     @if ($pendapatan->nilai_pendapatan > 30)
                                         @php 
                                             $hasil_rupiah = number_format($pendapatan->nilai_pendapatan,0,',','.');
                                         @endphp
                                         <td>Rp. {{ $hasil_rupiah }}</td>
-                                    @else
+                                    @elseif ($pendapatan->nilai_pendapatan > 0)
                                         @php 
                                             $hasil_rupiah = $pendapatan->nilai_pendapatan;
                                         @endphp
                                         <td>{{ $hasil_rupiah }} %</td>
+                                    @else
+                                        <td>{{ $pendapatan->nilai_pendapatan }}</td>
                                     @endif
                                     {{-- <td>Rp. {{ $hasil_rupiah }}</td> --}}
                                     <td>{{ $pendapatan->status }}</td>

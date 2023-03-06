@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Karyawan;
 use App\Models\Pendapatan;
 use App\Models\Gaji;
+use App\Models\Lembur;
+use App\Models\Potongan;
 use App\Models\PeriodeTanggal;
 use RealRashid\SweetAlert\Facades\Alert;
 use PDF;
@@ -42,21 +44,86 @@ class GajiBersihController extends Controller
         return Redirect::route('data_salary');
     }
     public function data_gajiBersih(){
-        $gBersih = GajiBersih::all();
-        $gBersihs =  $gBersih->sortBy('id_karyawan');
-        return view('data_gajiBersih', compact('gBersihs'));
+        $id = 1;
+        $periodes = PeriodeTanggal::where('id', $id)->get();
+
+        foreach ($periodes as $periode) {
+            $tgl1 = $periode->tgl_periode1;
+            $tgl2 = $periode->tgl_periode2;
+        }
+
+        $range = [$tgl1, $tgl2];
+        $karyawans = DB::table('karyawans')->get();
+        $totalPerid = Lembur::groupBy('id_karyawan')->selectRaw('id_karyawan, sum(jam1) as total')->selectRaw('id_karyawan, sum(jam2) as total1')->whereBetween('tgl_lembur', [$tgl1, $tgl2])->get();
+        $totalPerid1 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as ptotal'))->where('kode_tunjangan', '2002')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        $totalPerid2 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as ptotal1'))->where('kode_tunjangan', '2003')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        $totalPerid4 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as totalbpjs1'))->where('kode_tunjangan', '2004')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        $totalPerid5 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as totalbpjs2'))->where('kode_tunjangan', '2005')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        // $totalPerid6 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as totalbpjs3'))->where('kode_tunjangan', '2006')->groupBy('id_karyawan')->get();
+        // dd($totalPerid1);
+        $totalPerid3 = DB::table('potongans')->select('id_karyawan', DB::raw('SUM(nilai_potongan) as totalpot'))->where('jenis', 'Wajib')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        $totalPerid6 = DB::table('potongans')->select('id_karyawan', DB::raw('SUM(nilai_potongan) as totalpot1'))->where('jenis', 'Tidak Wajib')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        return view('data_gajiBersih', compact('karyawans', 'totalPerid', 'totalPerid1', 'totalPerid2', 'totalPerid3', 'totalPerid4', 'totalPerid5', 'totalPerid6', 'tgl2'));
     }
 
     public function cari(Request $request){
         $cari = $request->cari;
+        $id = 1;
+        $periodes = PeriodeTanggal::where('id', $id)->get();
 
-        $gBersihs = GajiBersih::where('id_karyawan', 'like', "%".$cari."%")->paginate();
+        foreach ($periodes as $periode) {
+            $tgl1 = $periode->tgl_periode1;
+            $tgl2 = $periode->tgl_periode2;
+        }
+        $karyawans = Karyawan::where('id_karyawan', 'like', "%".$cari."%")->orwhere('nama', 'like', "%".$cari."%")->paginate(5);
         // dd($gBersihs);
-        return view('data_gajiBersih', compact('gBersihs'));
+        $totalPerid = Lembur::groupBy('id_karyawan')->selectRaw('id_karyawan, sum(jam1) as total')->selectRaw('id_karyawan, sum(jam2) as total1')->whereBetween('tgl_lembur', [$tgl1, $tgl2])->get();
+        $totalPerid1 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as ptotal'))->where('kode_tunjangan', '2002')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        $totalPerid2 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as ptotal1'))->where('kode_tunjangan', '2003')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        $totalPerid4 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as totalbpjs1'))->where('kode_tunjangan', '2004')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        $totalPerid5 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as totalbpjs2'))->where('kode_tunjangan', '2005')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        // $totalPerid6 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as totalbpjs3'))->where('kode_tunjangan', '2006')->groupBy('id_karyawan')->get();
+        // dd($totalPerid1);
+        $totalPerid3 = DB::table('potongans')->select('id_karyawan', DB::raw('SUM(nilai_potongan) as totalpot'))->where('jenis', 'Wajib')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        $totalPerid6 = DB::table('potongans')->select('id_karyawan', DB::raw('SUM(nilai_potongan) as totalpot1'))->where('jenis', 'Tidak Wajib')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        
+        return view('data_gajiBersih', compact('karyawans', 'totalPerid', 'totalPerid1', 'totalPerid2', 'totalPerid3', 'totalPerid4', 'totalPerid5', 'totalPerid6', 'tgl2'));
     }
 
     public function print_gaji(){
 
+        $id = 1;
+        $periodes = PeriodeTanggal::where('id', $id)->get();
+
+        foreach ($periodes as $periode) {
+            $tgl1 = $periode->tgl_periode1;
+            $tgl2 = $periode->tgl_periode2;
+        }
+
+        $range = [$tgl1, $tgl2];
+        $karyawans = DB::table('karyawans')->get();
+        $totalPerid = Lembur::groupBy('id_karyawan')->selectRaw('id_karyawan, sum(jam1) as total')->selectRaw('id_karyawan, sum(jam2) as total1')->whereBetween('tgl_lembur', [$tgl1, $tgl2])->get();
+        $totalPerid1 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as ptotal'))->where('kode_tunjangan', '2002')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        $totalPerid2 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as ptotal1'))->where('kode_tunjangan', '2003')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        $totalPerid4 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as totalbpjs1'))->where('kode_tunjangan', '2004')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        $totalPerid5 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as totalbpjs2'))->where('kode_tunjangan', '2005')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        // $totalPerid6 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as totalbpjs3'))->where('kode_tunjangan', '2006')->groupBy('id_karyawan')->get();
+        // dd($totalPerid1);
+        $totalPerid3 = DB::table('potongans')->select('id_karyawan', DB::raw('SUM(nilai_potongan) as totalpot'))->where('jenis', 'Wajib')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        $totalPerid6 = DB::table('potongans')->select('id_karyawan', DB::raw('SUM(nilai_potongan) as totalpot1'))->where('jenis', 'Tidak Wajib')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        
+        return view('print_gaji', compact('karyawans', 'totalPerid', 'totalPerid1', 'totalPerid2', 'totalPerid3', 'totalPerid4', 'totalPerid5', 'totalPerid6', 'tgl2'));          
+    }
+
+    public function delete_gajiBersih($id){
+        $gajiBersih = GajiBersih::find($id);
+        // dd($gajiBersih);
+        $gajiBersih->delete();
+        Alert::success('Congrats', 'You\'ve Successfully Delete Data');
+        return Redirect::route('data_gajiBersih');
+    }
+
+    public function gaji_karyawan(){
         $id = 1;
 
         $periodes = PeriodeTanggal::where('id', $id)->get();
@@ -68,20 +135,15 @@ class GajiBersihController extends Controller
 
         $range = [$tgl1, $tgl2];
 
-        $gajis = GajiBersih::all();
-        $g = $gajis->sortBy('id_karyawan');
-
-        $gaji = $g->whereBetween('tgl_gaji', [$tgl1, $tgl2])->values()->all();
-
-        $pdf = PDF::loadView('print_gaji', ['gaji' => $gaji])->setPaper('A4', 'potrait');
-        return $pdf->stream('Laporan-Data-Keuangan.pdf');
-    }
-
-    public function delete_gajiBersih($id){
-        $gajiBersih = GajiBersih::find($id);
-        // dd($gajiBersih);
-        $gajiBersih->delete();
-        Alert::success('Congrats', 'You\'ve Successfully Delete Data');
-        return Redirect::route('data_gajiBersih');
+        $totalPerid = Lembur::groupBy('id_karyawan')->selectRaw('id_karyawan, sum(jam1) as total')->selectRaw('id_karyawan, sum(jam2) as total1')->whereBetween('tgl_lembur', [$tgl1, $tgl2])->get();
+        $totalPerid1 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as ptotal'))->where('kode_tunjangan', '2002')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        $totalPerid2 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as ptotal1'))->where('kode_tunjangan', '2003')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        $totalPerid4 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as totalbpjs1'))->where('kode_tunjangan', '2004')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        $totalPerid5 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as totalbpjs2'))->where('kode_tunjangan', '2005')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        // $totalPerid6 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as totalbpjs3'))->where('kode_tunjangan', '2006')->groupBy('id_karyawan')->get();
+          // dd($totalPerid1);
+          $totalPerid3 = DB::table('potongans')->select('id_karyawan', DB::raw('SUM(nilai_potongan) as totalpot'))->where('jenis', 'Wajib')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+          $totalPerid6 = DB::table('potongans')->select('id_karyawan', DB::raw('SUM(nilai_potongan) as totalpot1'))->where('jenis', 'Tidak Wajib')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        return view('gaji_karyawan', compact('totalPerid', 'totalPerid1', 'totalPerid2', 'totalPerid3', 'totalPerid4', 'totalPerid5', 'totalPerid6'));
     }
 }

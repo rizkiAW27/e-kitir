@@ -44,7 +44,7 @@ class PendapatanController extends Controller
     }
 
     public function data_pendapatan(){
-        $pendapatan = Pendapatan::join('karyawans', 'karyawans.id_karyawan', '=', 'pendapatans.id_karyawan')->join('gajis', 'gajis.kode', '=', 'pendapatans.kode_tunjangan')->get(['pendapatans.*', 'karyawans.nama', 'gajis.nama_pendapatan']);
+        $pendapatan = Pendapatan::join('karyawans', 'karyawans.id_karyawan', '=', 'pendapatans.id_karyawan')->get(['pendapatans.*', 'karyawans.nama']);
         // dd($pendapatans);
         $pendapatans = $pendapatan->sortBy('id_karyawan');
         return view('data_pendapatan', compact('pendapatans'));
@@ -88,13 +88,16 @@ class PendapatanController extends Controller
             $tgl1 = $periode->tgl_periode1;
             $tgl2 = $periode->tgl_periode2;
         }
+
         $range = [$tgl1, $tgl2];
         $gajis = Gaji::all();
         $pendapatans = Pendapatan::all();
         $lemburans = Lembur::whereBetween('created_at', [$tgl1, $tgl2])->latest()->get();
         $potongans = Potongan::whereBetween('created_at', [$tgl1, $tgl2])->latest()->get();
-        // dd($karyawan);
-        return view('data_ekitir', compact('karyawan','pendapatans', 'gajis', 'lemburans', 'potongans'));
+
+        return view('data_ekitir', compact('karyawan', 'pendapatans', 'gajis', 'lemburans', 'potongans'));
+       
+            
     }
 
     public function kitir_karyawan(){
@@ -120,7 +123,12 @@ class PendapatanController extends Controller
         }else{
             foreach ($karyawans as $karyawan) {
                 // dd($karyawan);
-                return view('kitir_karyawan', compact('karyawan', 'pendapatans', 'gajis', 'lemburans', 'potongans'));
+                if($karyawan->status_ttd == "sudah"){
+                    return view('kitir_karyawan', compact('karyawan', 'pendapatans', 'gajis', 'lemburans', 'potongans'));
+                }else{
+                    Alert::warning('Oppss!', 'Maaf Kamu Belum Melakukan Tandatangan Penerimaan Gaji di Bagian Keuangan :)');
+                    return Redirect::route('home');
+                }
             }
         }
     }
@@ -128,14 +136,14 @@ class PendapatanController extends Controller
     public function cari3(Request $request){
         $cari3 = $request->cari3;
         // $pendapatan = Pendapatan::join('karyawans', 'karyawans.id_karyawan', '=', 'pendapatans.id_karyawan')->join('gajis', 'gajis.kode', '=', 'pendapatans.kode_tunjangan')->get(['pendapatans.*', 'karyawans.nama', 'gajis.nama_pendapatan']);
-        $pendapatans = Pendapatan::where('id_karyawan', 'like', "%".$cari3."%")->paginate();
+        $pendapatans = Pendapatan::where('id_karyawan', 'like', "%".$cari3."%")->orwhere('kode_tunjangan', 'like', "%".$cari3."%")->paginate();
         // dd($gajis);
         return view('data_pendapatan', compact('pendapatans'));
     }
 
     public function cari5(Request $request){
         $cari5 = $request->cari5;
-        $karyawans = Karyawan::where('id_karyawan', 'like', "%".$cari5."%")->paginate();
+        $karyawans = Karyawan::where('id_karyawan', 'like', "%".$cari5."%")->orwhere('nama', 'like', "%".$cari5."%")->paginate();
         return view('data_salary', compact('karyawans'));
     }
 
@@ -146,7 +154,7 @@ class PendapatanController extends Controller
 
     public function cari8(Request $request){
         $cari8 = $request->cari8;
-        $karyawans = Karyawan::where('id_karyawan', 'like', "%".$cari8."%")->paginate();
+        $karyawans = Karyawan::where('id_karyawan', 'like', "%".$cari8."%")->orwhere('nama', 'like', "%".$cari8."%")->paginate();
         return view('admin_finance.d_tunjangan', compact('karyawans'));
     }
 

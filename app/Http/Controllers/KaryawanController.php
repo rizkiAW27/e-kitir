@@ -95,8 +95,36 @@ class KaryawanController extends Controller
     public function cari1(Request $request){
         $cari1 = $request->cari1;
 
-        $karyawans = Karyawan::where('id_karyawan', 'like', "%".$cari1."%")->paginate();
+        $karyawans = Karyawan::where('id_karyawan', 'like', "%".$cari1."%")->orwhere('nama', 'like', "%".$cari1."%")->paginate();
         // dd($karyawans);
         return view('data_karyawan', compact('karyawans'));
+    }
+
+    public function index_status(){
+        $employs = DB::table('karyawans')->get();
+        return view('index_status', compact('employs'));       
+    }
+
+    public function edit_ttd(Karyawan $ttd){
+        return view('edit_ttd', compact('ttd'));
+    }
+
+    public function update_ttd(Karyawan $ttd, Request $request){
+        $request->validate([
+            'status_ttd' => 'required',
+        ]);
+        $ttd->update([
+            'status_ttd' => $request->status_ttd,
+        ]);
+        Alert::success('Congrats', 'You\'ve Update Successfully Update Data');
+        return Redirect::route('index_status');
+    }
+
+    public function cari9(Request $request){
+        $cari9 = $request->cari9;
+
+        $employs = Karyawan::where('id_karyawan', 'like', "%".$cari9."%")->orwhere('nama', 'like', "%".$cari9."%")->paginate(5);
+        // dd($employs);
+        return view('index_status', compact('employs'));
     }
 }

@@ -33,9 +33,7 @@
                                 <th scope="col">Bagian</th>
                                 <th scope="col">Jabatan</th>
                                 <th scope="col">Status Karyawan</th>
-                                @if (Auth::user()->hak_akses == 'admin')
-                                    <th scope="col">Aksi</th>
-                                @endif
+                                <th scope="col">Aksi</th>
                               </tr>
                             </thead>
                             <tbody>

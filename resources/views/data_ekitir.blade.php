@@ -1,4 +1,3 @@
-@if (Auth::user()->hak_akses == 'super_admin' || Auth::user()->hak_akses == 'admin_finance')
 <!doctype html>
 <html lang="en">
   <head>
@@ -14,9 +13,6 @@
         table {
             font-size: 13px;
         }
-        .blur {
-            filter: blur(4px);
-        }
         .size-logo{
             width: 80px;
             height: 80px;
@@ -31,6 +27,7 @@
     @endphp
     @foreach ($dbperiode as $periode)
         @php
+            
             $date1 = $periode->tgl_periode1;
             $date2 = $periode->tgl_periode2;
             $datetime1 = DateTime::createFromFormat('Y-m-d', $date1);
@@ -39,7 +36,7 @@
     @endforeach
     <div class="container">
         <div class="row">
-            <div class="col-md-12 ">
+            <div class="col-md-12 blur">
                 <div style="width: 15rem; text-align:center; border: 1px solid;">
                     <h5>Pribadi & Rahasia</h5>
                 </div>
@@ -48,7 +45,7 @@
                 <h6>Slip Gaji</h6>
                 Periode: {{ $datetime1->format('d F Y') }} - {{ $datetime2->format('d F Y') }}
             </div>
-            <div class="d-flex ">
+            <div class="d-flex blur">
                 <div style="width: 50rem">
                     <div class="d-flex">
                         <div style="width: 10rem;">Nama</div>
@@ -134,44 +131,45 @@
                                     @endif
                                 @endforeach
                                 @foreach ($pendapatans as $pendapatan)
-                                    @foreach ($gajis as $gaji)
-                                    <tr>
-                                        @if ($pendapatan->kode_tunjangan == $gaji->kode && $id_karyawan == $pendapatan->id_karyawan && $pendapatan->status == "On")
-                                            @if ($pendapatan->nilai_pendapatan >= 15)
-                                                @php
-                                                    $total += $pendapatan->nilai_pendapatan;
-                                                    $jumlah = $total + $karyawan->gaji_pokok;
-                                                @endphp
+                                    @if ($karyawan->id_karyawan == $pendapatan->id_karyawan)
+                                        @foreach ($gajis as $gaji)
+                                        <tr>
+                                            @if ($pendapatan->id_tunjangan == $gaji->id && $pendapatan->status == "On" && $pendapatan->nilai_pendapatan > 0)
+                                                @if ($pendapatan->nilai_pendapatan >= 15 && $pendapatan->nilai_pendapatan > 0)
+                                                    @php
+                                                        $total += $pendapatan->nilai_pendapatan;
+                                                        $jumlah = $total + $karyawan->gaji_pokok;
+                                                    @endphp
+                                                @endif
+                                                @if ($gaji->jenis == "Tunjangan Tetap" && $pendapatan->nilai_pendapatan > 0)
+                                                    @php
+                                                        $pendapatanTun += $pendapatan->nilai_pendapatan;
+                                                        $jumlahpendapatan = $pendapatanTun + $karyawan->gaji_pokok;
+                                                        $totalLembur = $jamLembur1 + $jamLembur2;
+                                                        $upahLembur = floor(($jumlahpendapatan * $totalLembur) / 173);
+                                                        $hasil_rupiah2 = number_format($upahLembur,0,',','.');
+                                                    @endphp
+                                                @endif
+                                                @if ($gaji->jenis == "Karyawan")
+                                                @elseif ($pendapatan->nilai_pendapatan <= 15 && $pendapatan->nilai_pendapatan > 0)
+                                                    @php
+                                                        $hasil = ($jumlahpendapatan * $pendapatan->nilai_pendapatan) / 100;
+                                                        $hasil_rupiah = number_format($hasil,0,',','.');
+                                                        $nTunjangan += $hasil;
+                                                    @endphp
+                                                    <td>{{ $gaji->nama_pendapatan }} ({{ $pendapatan->nilai_pendapatan }}% {{ $gaji->jenis }})</td>
+                                                    <td>Rp. {{ $hasil_rupiah }}</td>
+                                                @else
+                                                    <td>{{ $gaji->nama_pendapatan }}</td>
+                                                    @php 
+                                                        $hasil_rupiah1 = number_format($pendapatan->nilai_pendapatan,0,',','.');
+                                                    @endphp
+                                                    <td>Rp. {{ $hasil_rupiah1 }}</td>
+                                                @endif            
                                             @endif
-                                            @if ($gaji->jenis == "Tunjangan Tetap")
-                                                @php
-                                                    $pendapatanTun += $pendapatan->nilai_pendapatan;
-                                                    $jumlahpendapatan = $pendapatanTun + $karyawan->gaji_pokok;
-                                                    $totalLembur = $jamLembur1 + $jamLembur2;
-                                                    $upahLembur = floor(($jumlahpendapatan * $totalLembur) / 173);
-                                                    $hasil_rupiah2 = number_format($upahLembur,0,',','.');
-                                                @endphp
-                                            @endif
-                                            @if ($gaji->jenis == "Karyawan")
-                                            @elseif ($pendapatan->nilai_pendapatan <= 15)
-                                                @php
-                                                    $hasil = ($jumlahpendapatan * $pendapatan->nilai_pendapatan) / 100;
-                                                    $hasil_rupiah = number_format($hasil,0,',','.');
-                                                    $nTunjangan += $hasil;
-                                                @endphp
-                                                <td>{{ $gaji->nama_pendapatan }} ({{ $pendapatan->nilai_pendapatan }}% {{ $gaji->jenis }})</td>
-                                                <td>Rp. {{ $hasil_rupiah }}</td>
-                                            @else
-                                                <td>{{ $gaji->nama_pendapatan }}</td>
-                                                @php 
-                                                    $hasil_rupiah1 = number_format($pendapatan->nilai_pendapatan,0,',','.');
-                                                @endphp
-                                                <td>Rp. {{ $hasil_rupiah1 }}</td>
-                                            @endif
-                                                
-                                        @endif
-                                    </tr>
-                                    @endforeach
+                                        </tr>
+                                        @endforeach
+                                    @endif
                                 @endforeach
                                 @if ($upahLembur == 0)
                                 @else
@@ -198,12 +196,14 @@
                                     $id_karyawan = $karyawan->id_karyawan;
                                     $nilaiPotongan = 0;
                                     $nilaiPot = 0;
+                                    $koreksi = 0;
+                                    $nilaikoreksi = 0;
                                     $pots = DB::table('potongans')->get();
                                 @endphp
                                 @foreach ($pots as $pot)
-                                    @if ($pot->jenis == 'Wajib')
+                                    @if ($pot->jenis == 'Wajib' || $pot->jenis == 'Tidak Wajib')
                                         <tr>
-                                            @if ($id_karyawan == $pot->id_karyawan)
+                                            @if ($id_karyawan == $pot->id_karyawan && $pot->nilai_potongan > 0)
                                                 <td>{{ $pot->nama_potongan }}</td>
                                                 @php 
                                                     $hasil_rupiah4 = number_format($pot->nilai_potongan,0,',','.');
@@ -240,7 +240,7 @@
                                 @foreach ($pendapatans as $pendapatan)
                                     @foreach ($gajis as $gaji)
                                     <tr>
-                                        @if ($pendapatan->kode_tunjangan == $gaji->kode && $id_karyawan == $pendapatan->id_karyawan && $pendapatan->status == "On")
+                                        @if ($pendapatan->id_tunjangan == $gaji->id && $id_karyawan == $pendapatan->id_karyawan && $pendapatan->status == "On" && $pendapatan->nilai_pendapatan > 0)
                                             
                                             @if ($pendapatan->nilai_pendapatan >= 15)
                                                 @php
@@ -254,19 +254,29 @@
                                                     $hasil_rupiah7 = number_format($hasil,0,',','.');
                                                     $nilaiTun += $hasil;
                                                 @endphp
-                                            <td>{{ $gaji->nama_pendapatan }} ({{ $pendapatan->nilai_pendapatan }}% {{ $gaji->jenis }})</td>
-                                            <td>Rp. {{ $hasil_rupiah7 }}</td>
+                                                <td>{{ $gaji->nama_pendapatan }} ({{ $pendapatan->nilai_pendapatan }}% {{ $gaji->jenis }})</td>
+                                                <td>Rp. {{ $hasil_rupiah7 }}</td>
                                             @endif
+                                            
+                                        @endif
+                                        @if ($pendapatan->id_tunjangan == $gaji->id && $id_karyawan == $pendapatan->id_karyawan && $pendapatan->status == "On" && $pendapatan->nilai_pendapatan < 0)
+                                            @php
+                                                $koreksi = $pendapatan->nilai_pendapatan;
+                                                $nilaikoreksi = number_format($koreksi,0,',','.');
+                                            @endphp
+                                            <td>{{ $gaji->nama_pendapatan }}</td>
+                                            <td>Rp. {{ $nilaikoreksi }}</td>
                                         @endif
                                     </tr>
                                     @endforeach
                                 @endforeach
+
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
-            <div class="d-flex">
+            <div class="d-flex blur">
                 <div style="width: 40rem">
                     <div class="table">
                         <table class="table">
@@ -307,7 +317,7 @@
                             </thead>
                                 @if ($nilaiPotongan == 0)
                                     @php
-                                        $totalPotongan = $nilaiPot + $nilaiTun;
+                                        $totalPotongan = $nilaiPot + $nilaiTun - $koreksi;
                                         $hasil_rupiah10 = number_format($totalPotongan,0,',','.');
                                     @endphp
                                 @else
@@ -341,7 +351,7 @@
                     $hasil_rupiah12 = number_format($totalGajiBersih,0,',','.');
                 @endphp
             @endif
-            <div>
+            <div class="blur">
                 <table>
                     <tr style="width: 15rem">
                         <td>Total Gaji Bersih</td>
@@ -372,34 +382,13 @@
                     </tr>
                 </table>
             </div>
-            <div class="position-absolute col-xl-10 col-lg-6 col-md-4 p-4">
-                <div class="d-flex justify-content-center bg-info p-4 rounded">
-                    <div align="center">
-                        <h2>Selamat Ini data E-kitir Anda</h2>
-                        <form action="{{ route('store_gajiBersih') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="id_karyawan" value="{{ $id_karyawan }}">
-                            <input type="hidden" name="nama" value="{{ $karyawan->nama }}">
-                            <input type="hidden" name="nama_bank" value="{{ $karyawan->nama_bank }}">
-                            <input type="hidden" name="norek" value="{{ $karyawan->norek }}">
-                            <input type="hidden" name="namaPem_bank" value="{{ $karyawan->namaPem_bank }}">
-                            <input type="hidden" name="gaji_bersih" value="{{ $totalGajiBersih }}">
-                            <input type="hidden" name="potongan" value="{{ $totalPotongan }}">
-                            <input type="hidden" name="tgl_gaji" value="{{ date('Y-m-d') }}">
-                            <button type="submit" class="btn btn-success rounded">Save & Cetak</button>
-                            <a href="{{ route('back') }}" class="btn btn-warning">Kembali</a>
-                        </form>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
-    {{-- <script>
+    <script>
         window.print();
-    </script> --}}
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
   </body>
-</html>    
-@endif
+</html>

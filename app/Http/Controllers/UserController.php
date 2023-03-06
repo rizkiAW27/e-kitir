@@ -83,7 +83,7 @@ class UserController extends Controller
     public function cari7(Request $request){
         $cari7 = $request->cari7;
 
-        $users = User::where('id_karyawan', 'like', '%'.$cari7.'%')->paginate();
+        $users = User::where('id_karyawan', 'like', '%'.$cari7.'%')->orwhere('name', 'like', "%".$cari7."%")->paginate();
 
         return view('data_user', compact('users'));
     }

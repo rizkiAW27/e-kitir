@@ -36,6 +36,7 @@
                             <tbody>
                                 @php
                                     $no = 1;
+                                    $hasil_rupiah = 0;
                                 @endphp
                                 @if ($karyawans->count() > 0)
                                 
@@ -48,7 +49,10 @@
                                             <td>{{ $hasil->nama }}</td>
                                             <td>{{ $hasil->bagian }}</td>
                                             <td>{{ $hasil->jabatan }}</td>
-                                            <td>{{ $hasil->gaji_pokok }}</td>
+                                            @php 
+                                                $hasil_rupiah = number_format($hasil->gaji_pokok,0,',','.');
+                                            @endphp
+                                            <td>Rp. {{ $hasil_rupiah }}</td>
                                             <td>
                                                 <div class="d-flex">
                                                     <a href="{{ route('tambah_potongan', $hasil) }}" class="btn btn-warning btn-sm me-1">Potongan</a>

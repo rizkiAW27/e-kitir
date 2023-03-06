@@ -10,6 +10,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\NotifController;
 use App\Http\Controllers\LemburController;
+use App\Http\Controllers\TtdStatusController;
 use App\Http\Controllers\GajiBersihController;
 use App\Http\Controllers\PeriodeTanggalController;
 use App\Http\Controllers\PendapatanController;
@@ -61,7 +62,11 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('/edit_potongan/{potongan}/update', [PotonganController::class, 'update_potongan'])->name('update_potongan');
         Route::get('/delete_potongan/{id}/delete', [PotonganController::class, 'delete_potongan'])->name('delete_potongan');
         Route::get('/cari/data/potongan/karyawan/', [PotonganController::class, 'cari6'])->name('cari6');
-
+        Route::post('/data/potongan/tambah', [PotonganController::class, 'storeDataPotongan'])->name('storeDataPotongan');
+        Route::get('/editdatapotongan/{datapotongan}/edit', [PotonganController::class, 'editdatapotongan'])->name('editdatapotongan');
+        Route::patch('/editdatapotongan/{datapotongan}/update', [PotonganController::class, 'updatedatapotongan'])->name('updatedatapotongan');
+        Route::get('/deletedatapotongan/{id}/delete', [PotonganController::class, 'deletedatapotongan'])->name('deletedatapotongan');
+        
         //tambah Gaji
         Route::get('/tambah_gaji/{karyawan}', [PendapatanController::class, 'tambah_gaji'])->name('tambah_gaji');
         Route::post('/tambah_pendapatan', [PendapatanController::class, 'store_tunjangan'])->name('store_tunjangan');
@@ -124,6 +129,15 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/index/admin/data/tunjangan/karyawan', [PendapatanController::class, 'd_tunjangan'])->name('d_tunjangan');
         Route::get('/data_salary/cari8', [PendapatanController::class, 'cari8'])->name('cari8');
         Route::get('/back/data/', [PendapatanController::class, 'back'])->name('back');
+
+        //gaji karyawan
+        Route::get('/data/gaji/karyawan/seluruh', [GajiBersihController::class, 'gaji_karyawan'])->name('gaji_karyawan');
+
+        //ttd status tanda tangan
+        Route::get('/data/status/tanda/tangan', [KaryawanController::class, 'index_status'])->name('index_status');
+        Route::get('/data/status/tanda/tangan/{ttd}/edit', [KaryawanController::class, 'edit_ttd'])->name('edit_ttd');
+        Route::patch('/data/status/tanda/tangan/{ttd}/update', [KaryawanController::class, 'update_ttd'])->name('update_ttd');
+        Route::get('/data/status/tanda/tangan/cari9', [KaryawanController::class, 'cari9'])->name('cari9');
 });
 
 // Route::middleware(['karyawan'])->group(function () {

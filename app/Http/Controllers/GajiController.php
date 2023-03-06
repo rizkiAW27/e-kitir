@@ -63,7 +63,7 @@ class GajiController extends Controller
     public function cari2(Request $request){
         $cari2 = $request->cari2;
 
-        $gajies = Gaji::where('kode', 'like', "%".$cari2."%")->paginate();
+        $gajies = Gaji::where('kode', 'like', "%".$cari2."%")->orwhere('nama_pendapatan', 'like', "%".$cari2."%")->paginate();
         // dd($gajis);
         return view('data_gaji', compact('gajies'));
     }

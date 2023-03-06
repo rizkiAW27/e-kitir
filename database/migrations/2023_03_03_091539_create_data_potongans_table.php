@@ -13,16 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('gaji_bersihs', function (Blueprint $table) {
+        Schema::create('data_potongans', function (Blueprint $table) {
             $table->id();
-            $table->integer('id_karyawan');
-            $table->string('nama');
-            $table->string('nama_bank');
-            $table->string('norek');
-            $table->string('namaPem_bank');
-            $table->integer('gaji_bersih');
-            $table->integer('potongan');
-            $table->date('tgl_gaji');
+            $table->string('data_potongan');
             $table->timestamps();
         });
     }
@@ -34,6 +27,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('gaji_bersihs');
+        Schema::dropIfExists('data_potongans');
     }
 };

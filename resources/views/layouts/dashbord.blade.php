@@ -87,6 +87,7 @@
                         Setting
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="{{ route('index_status') }}">Kelola Status TTD</a></li>
                         <li><a class="dropdown-item" href="{{ route('data_user') }}">Kelola Users</a></li>
                         <li><a class="dropdown-item" href="{{ route('register') }}">Registrasi Akun</a></li>
                         <li><a class="dropdown-item" href="{{ route('setting_periode') }}">Periode</a></li>

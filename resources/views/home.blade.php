@@ -22,7 +22,7 @@
                     <div class="ikon1 ms-4">
                         <div class="d-flex">
                             <img src="{{ asset('images/user.png') }}" class="ikon-logo">
-                            <div class="ms-2 mt-2"><h5>Users</h5></div>
+                            <div class="ms-2 mt-2"><h5>Employe</h5></div>
                         </div>
                         @php
                             $dbKaryawan = DB::table('karyawans')->get()->count();
@@ -33,28 +33,21 @@
                     </div>
                     <div class="ikon2 ms-4">
                         <div class="d-flex">
-                            <img src="{{ asset('images/rp.png') }}" class="ikon-logo">
-                            <div class="ms-2 mt-2"><h5>expense</h5></div>
+                            <img src="{{ asset('images/user.png') }}" class="ikon-logo">
+                            <div class="ms-2 mt-2"><h5>Users</h5></div>
                         </div>
-                        @php 
-                            $total = 0;
-                            $hasil_rupiah = 0; 
-                            $dbgaji = DB::table('gaji_bersihs')->get(); 
-                        @endphp
-                        @foreach ($dbgaji as $gaji) 
-                            @php 
-                                $total += $gaji->gaji_bersih; 
-                                $hasil_rupiah = number_format($total,2,',','.');
+                            @php
+                                $users = DB::table('users')->get()->count();
                             @endphp
-                        @endforeach
-                        <div class="d-flex justify-content-center mt-3">
-                            <b><h6>{{ $hasil_rupiah }}</h6></b>
+                            <div class="d-flex justify-content-center">
+                                <b><h1>{{ $users }}</h1></b>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         @endif
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex justify-content-center mb-4">

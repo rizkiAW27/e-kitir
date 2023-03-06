@@ -26,6 +26,7 @@ return new class extends Migration
             $table->string('nama_bank');
             $table->string('norek');
             $table->string('namaPem_bank');
+            $table->string('status_ttd')->default('belum');
             $table->timestamps();
         });
     }

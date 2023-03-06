@@ -13,6 +13,7 @@
                     <div class="d-flex">
                         <div class="ms-2">
                             <form action="{{ route('cari5') }}" method="get">
+                                @csrf
                                 <div class="input-group mb-3">
                                     <input type="text" class="form-control" name="cari5">
                                     <button class="btn btn-outline-secondary" type="submit" >Cari</button>

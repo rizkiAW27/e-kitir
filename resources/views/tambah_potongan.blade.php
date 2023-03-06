@@ -21,7 +21,15 @@
                                 </div>
                                 <div class="mb-1">
                                     <label  class="form-label">Nama Potongan</label>
-                                    <input type="text" class="form-control" name="nama_potongan">
+                                    @php
+                                        $dbdataPot = DB::table('data_potongans')->get();
+                                    @endphp
+                                    <select name="nama_potongan" class="form-select">
+                                        <option selected>--Pilih Salah Satu--</option>
+                                        @foreach ($dbdataPot as $dataPot)
+                                            <option {{ $dataPot->data_potongan }}>{{ $dataPot->data_potongan }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-5">

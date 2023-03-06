@@ -105,7 +105,7 @@ class LemburController extends Controller
 
     public function cari4(Request $request){
         $cari4 = $request->cari4;
-        $lemburs = Lembur::where('id_karyawan', 'like', "%".$cari4."%")->paginate();
+        $lemburs = Lembur::where('id_karyawan', 'like', "%".$cari4."%")->orwhere('ket_lembur', 'like', "%".$cari4."%")->paginate();
         return view('dataKaryawan_lembur', compact('lemburs'));
     }
 

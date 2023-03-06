@@ -30,7 +30,7 @@
                                     <select name="jenis" class="form-select">
                                         <option value="{{ $gaji->jenis }}">{{ $gaji->jenis }}</option>
                                         <option >--Pilih Salah Satu--</option>
-                                        <option value="Pendapatan Tetap">Pendapatan Tetap</option>
+                                        <option value="Pendapatan Tidak Tetap">Pendapatan Tidak Tetap</option>
                                         <option value="Tunjangan Tetap">Tunjangan Tetap</option>
                                         <option value="Tunjangan Tidak Tetap">Tunjangan Tidak Tetap</option>
                                         <option value="Perusahaan">Perusahaan</option>
