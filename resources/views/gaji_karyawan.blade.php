@@ -6,6 +6,11 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Data Gaji Keseluruhan</title>
     <style>
+        body {
+            font-family: sans-serif;
+            color: #232323;
+            font-size: 12px;
+        }
         .table1 {
             font-family: sans-serif;
             color: #232323;
@@ -18,6 +23,10 @@
         .font {
             font-size: 10px;
             margin-top: 10px;
+        }
+        .size-logo{
+            width: 80px;
+            height: 80px;
         }
     </style>
 </head>
@@ -53,6 +62,25 @@
         $dblembur = DB::table('lemburs')->get();
         $karyawans = DB::table('karyawans')->get();
     @endphp
+    <div class="container">
+        @php
+            $dbperiode = DB::table('periode_tanggals')->get();
+        @endphp
+        @foreach ($dbperiode as $periode)
+            @php
+                $date1 = $periode->tgl_periode1;
+                $date2 = $periode->tgl_periode2;
+                $datetime1 = DateTime::createFromFormat('Y-m-d', $date1);
+                $datetime2 = DateTime::createFromFormat('Y-m-d', $date2);
+            @endphp
+        @endforeach
+        <div>
+            <img src="{{ asset('images/logo.jpg') }}" class="size-logo">
+            <h2>PT Cahaya Mulia Persada Nusa</h2>
+            <h3>Data Gaji Karyawan</h3>
+            Periode : {{ $datetime1->format('d F Y') }} - {{ $datetime2->format('d F Y') }}
+        </div>
+        <hr>
     <table class="table1">
         <thead>
             <tr>
