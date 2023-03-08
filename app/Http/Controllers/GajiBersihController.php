@@ -57,13 +57,13 @@ class GajiBersihController extends Controller
         $totalPerid = Lembur::groupBy('id_karyawan')->selectRaw('id_karyawan, sum(jam1) as total')->selectRaw('id_karyawan, sum(jam2) as total1')->whereBetween('tgl_lembur', [$tgl1, $tgl2])->get();
         $totalPerid1 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as ptotal'))->where('kode_tunjangan', '2002')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
         $totalPerid2 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as ptotal1'))->where('kode_tunjangan', '2003')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        $totalPerid3 = DB::table('potongans')->select('id_karyawan', DB::raw('SUM(nilai_potongan) as totalpot'))->where('jenis', 'Wajib')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
         $totalPerid4 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as totalbpjs1'))->where('kode_tunjangan', '2004')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
         $totalPerid5 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as totalbpjs2'))->where('kode_tunjangan', '2005')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
-        // $totalPerid6 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as totalbpjs3'))->where('kode_tunjangan', '2006')->groupBy('id_karyawan')->get();
-        // dd($totalPerid1);
-        $totalPerid3 = DB::table('potongans')->select('id_karyawan', DB::raw('SUM(nilai_potongan) as totalpot'))->where('jenis', 'Wajib')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
         $totalPerid6 = DB::table('potongans')->select('id_karyawan', DB::raw('SUM(nilai_potongan) as totalpot1'))->where('jenis', 'Tidak Wajib')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
-        return view('data_gajiBersih', compact('karyawans', 'totalPerid', 'totalPerid1', 'totalPerid2', 'totalPerid3', 'totalPerid4', 'totalPerid5', 'totalPerid6', 'tgl2'));
+        $totalPerid7 = DB::table('potongans')->select('id_karyawan', DB::raw('SUM(nilai_potongan) as totalpot2'))->where('jenis', 'PPh 21')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        
+        return view('data_gajiBersih', compact('karyawans', 'totalPerid', 'totalPerid1', 'totalPerid2', 'totalPerid3', 'totalPerid4', 'totalPerid5', 'totalPerid6', 'tgl2', 'totalPerid7'));
     }
 
     public function cari(Request $request){
@@ -80,14 +80,14 @@ class GajiBersihController extends Controller
         $totalPerid = Lembur::groupBy('id_karyawan')->selectRaw('id_karyawan, sum(jam1) as total')->selectRaw('id_karyawan, sum(jam2) as total1')->whereBetween('tgl_lembur', [$tgl1, $tgl2])->get();
         $totalPerid1 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as ptotal'))->where('kode_tunjangan', '2002')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
         $totalPerid2 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as ptotal1'))->where('kode_tunjangan', '2003')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        $totalPerid3 = DB::table('potongans')->select('id_karyawan', DB::raw('SUM(nilai_potongan) as totalpot'))->where('jenis', 'Wajib')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
         $totalPerid4 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as totalbpjs1'))->where('kode_tunjangan', '2004')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
         $totalPerid5 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as totalbpjs2'))->where('kode_tunjangan', '2005')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
-        // $totalPerid6 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as totalbpjs3'))->where('kode_tunjangan', '2006')->groupBy('id_karyawan')->get();
-        // dd($totalPerid1);
-        $totalPerid3 = DB::table('potongans')->select('id_karyawan', DB::raw('SUM(nilai_potongan) as totalpot'))->where('jenis', 'Wajib')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
         $totalPerid6 = DB::table('potongans')->select('id_karyawan', DB::raw('SUM(nilai_potongan) as totalpot1'))->where('jenis', 'Tidak Wajib')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        $totalPerid7 = DB::table('potongans')->select('id_karyawan', DB::raw('SUM(nilai_potongan) as totalpot2'))->where('jenis', 'PPh 21')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
         
-        return view('data_gajiBersih', compact('karyawans', 'totalPerid', 'totalPerid1', 'totalPerid2', 'totalPerid3', 'totalPerid4', 'totalPerid5', 'totalPerid6', 'tgl2'));
+        return view('data_gajiBersih', compact('karyawans', 'totalPerid', 'totalPerid1', 'totalPerid2', 'totalPerid3', 'totalPerid4', 'totalPerid5', 'totalPerid6', 'tgl2', 'totalPerid7'));
+
     }
 
     public function print_gaji(){
@@ -105,14 +105,15 @@ class GajiBersihController extends Controller
         $totalPerid = Lembur::groupBy('id_karyawan')->selectRaw('id_karyawan, sum(jam1) as total')->selectRaw('id_karyawan, sum(jam2) as total1')->whereBetween('tgl_lembur', [$tgl1, $tgl2])->get();
         $totalPerid1 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as ptotal'))->where('kode_tunjangan', '2002')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
         $totalPerid2 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as ptotal1'))->where('kode_tunjangan', '2003')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        $totalPerid3 = DB::table('potongans')->select('id_karyawan', DB::raw('SUM(nilai_potongan) as totalpot'))->where('jenis', 'Wajib')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
         $totalPerid4 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as totalbpjs1'))->where('kode_tunjangan', '2004')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
         $totalPerid5 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as totalbpjs2'))->where('kode_tunjangan', '2005')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
-        // $totalPerid6 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as totalbpjs3'))->where('kode_tunjangan', '2006')->groupBy('id_karyawan')->get();
-        // dd($totalPerid1);
-        $totalPerid3 = DB::table('potongans')->select('id_karyawan', DB::raw('SUM(nilai_potongan) as totalpot'))->where('jenis', 'Wajib')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
         $totalPerid6 = DB::table('potongans')->select('id_karyawan', DB::raw('SUM(nilai_potongan) as totalpot1'))->where('jenis', 'Tidak Wajib')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        $totalPerid7 = DB::table('potongans')->select('id_karyawan', DB::raw('SUM(nilai_potongan) as totalpot2'))->where('jenis', 'PPh 21')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
         
-        return view('print_gaji', compact('karyawans', 'totalPerid', 'totalPerid1', 'totalPerid2', 'totalPerid3', 'totalPerid4', 'totalPerid5', 'totalPerid6', 'tgl2'));          
+        return view('print_gaji', compact('karyawans', 'totalPerid', 'totalPerid1', 'totalPerid2', 'totalPerid3', 'totalPerid4', 'totalPerid5', 'totalPerid6', 'tgl2', 'totalPerid7'));
+
+           
     }
 
     public function delete_gajiBersih($id){
@@ -136,14 +137,15 @@ class GajiBersihController extends Controller
         $range = [$tgl1, $tgl2];
 
         $totalPerid = Lembur::groupBy('id_karyawan')->selectRaw('id_karyawan, sum(jam1) as total')->selectRaw('id_karyawan, sum(jam2) as total1')->whereBetween('tgl_lembur', [$tgl1, $tgl2])->get();
-        $totalPerid1 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as ptotal'))->where('kode_tunjangan', '2002')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
-        $totalPerid2 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as ptotal1'))->where('kode_tunjangan', '2003')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
-        $totalPerid4 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as totalbpjs1'))->where('kode_tunjangan', '2004')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
-        $totalPerid5 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as totalbpjs2'))->where('kode_tunjangan', '2005')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
+        $totalPerid1 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as ptotal'))->where('kode_tunjangan', '2002')->groupBy('id_karyawan')->get();
+        $totalPerid2 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as ptotal1'))->where('kode_tunjangan', '2003')->groupBy('id_karyawan')->get();
+        $totalPerid4 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as totalbpjs1'))->where('kode_tunjangan', '2004')->groupBy('id_karyawan')->get();
+        $totalPerid5 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as totalbpjs2'))->where('kode_tunjangan', '2005')->groupBy('id_karyawan')->get();
         // $totalPerid6 = DB::table('pendapatans')->select('id_karyawan', DB::raw('SUM(nilai_pendapatan) as totalbpjs3'))->where('kode_tunjangan', '2006')->groupBy('id_karyawan')->get();
           // dd($totalPerid1);
-          $totalPerid3 = DB::table('potongans')->select('id_karyawan', DB::raw('SUM(nilai_potongan) as totalpot'))->where('jenis', 'Wajib')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
-          $totalPerid6 = DB::table('potongans')->select('id_karyawan', DB::raw('SUM(nilai_potongan) as totalpot1'))->where('jenis', 'Tidak Wajib')->groupBy('id_karyawan')->whereBetween('created_at', [$tgl1, $tgl2])->get();
-        return view('gaji_karyawan', compact('totalPerid', 'totalPerid1', 'totalPerid2', 'totalPerid3', 'totalPerid4', 'totalPerid5', 'totalPerid6'));
+          $totalPerid3 = DB::table('potongans')->select('id_karyawan', DB::raw('SUM(nilai_potongan) as totalpot'))->where('jenis', 'Wajib')->groupBy('id_karyawan')->get();
+          $totalPerid7 = DB::table('potongans')->select('id_karyawan', DB::raw('SUM(nilai_potongan) as totalpot2'))->where('jenis', 'Tidak Wajib')->groupBy('id_karyawan')->get();
+          $totalPerid6 = DB::table('potongans')->select('id_karyawan', DB::raw('SUM(nilai_potongan) as totalpot1'))->where('jenis', 'PPh 21')->groupBy('id_karyawan')->whereBetween('updated_at', [$tgl1, $tgl2])->get();
+        return view('gaji_karyawan', compact('totalPerid', 'totalPerid1', 'totalPerid2', 'totalPerid3', 'totalPerid4', 'totalPerid5', 'totalPerid6', 'totalPerid7'));
     }
 }

@@ -50,11 +50,14 @@
         $tbpjs2 = 0;
         $totalbpjs1 = 0;
         $totalbpjs2 = 0;
+        $jumlahbpjs1 = 0;
+        $jumlahbpjs2 = 0;
         $total_gaji = 0;
         $total_gajibersih = 0;
         $pengeluaran = 0;
         $totalpph21 = 0;
-        $potongan_koprasi = 0;
+        $potongan_koprasiwajib = 0;
+        $potongan_koprasiTwajib = 0;
         $dbgaji = DB::table('gajis')->get();
         $dbpotongan = DB::table('potongans')->get();
         $dbpendapatan = DB::table('pendapatans')->get();
@@ -128,11 +131,11 @@
                     <div style="display: flex">
                         @foreach ($dbgaji as $gaji)
                             @if ($gaji->jenis == "Tunjangan Tidak Tetap")
-                            @elseif ($gaji->jenis == "Tunjangan Tetap" || $gaji->nama_pendapatan == "Koreksi" || $gaji->nama_pendapatan == "Tunjangan Hari Raya (THR)")
+                            @elseif ($gaji->jenis == "Tunjangan Tetap" || $gaji->jenis == "Pendapatan Tidak Tetap")
                             @else
                                 @php
                                     $namadata = $gaji->nama_pendapatan;
-                                    $potong_kalimat = substr($namadata,15,15);
+                                    $potong_kalimat = substr($namadata,15,9);
                                 @endphp
                                 <div style="border: 1px solid #999; padding: 2px; width: 35px;">{{ $potong_kalimat }}</div>
                             @endif
@@ -253,7 +256,7 @@
                             @php
                                 $tbpjs1 = $ttt->totalbpjs1;
                                 $totalbpjs1 = (($gp + $total1) * $tbpjs1) / 100;
-                                // $totalbpjs1 = $gp + $total1 + $total2 + $nbpjs - $nbpjs1;
+                                $jumlahbpjs1 += $totalbpjs1;
                             @endphp
                         @endif
                     @endforeach
@@ -262,6 +265,7 @@
                             @php
                                 $tbpjs2 = $ttt1->totalbpjs2;
                                 $totalbpjs2 = (($gp + $total1) * $tbpjs2) / 100;
+                                $jumlahbpjs2 += $totalbpjs2;
                                 $totaltun = $gp + $total1 + $total2 + $totalbpjs1 - $totalbpjs2;
                             @endphp
                            {{ $totaltun }}
@@ -278,9 +282,13 @@
                                     $jlh = $jam1 + $jam2;
                                     $upahlembur = floor((($total1 + $gp) * $jlh) / 173);
                                 @endphp
-                                <div style="border: 1px solid #999; padding: 2px; width: 12px;">{{ $jam1 }}</div>
-                                <div style="border: 1px solid #999; padding: 2px; width: 12px;">{{ $jam2 }}</div>
+                                <div style="border: 1px solid #999; padding: 2px; width: 18px;">{{ $jam1 }}</div>
+                                <div style="border: 1px solid #999; padding: 2px; width: 18px;">{{ $jam2 }}</div>
                                 <div style="border: 1px solid #999; padding: 2px; width: 30px;">{{ $upahlembur }}</div>
+                            @else
+                                @php
+                                    $upahlembur = 0;
+                                @endphp
                             @endif
                         @endforeach    
                     </div>
@@ -314,12 +322,24 @@
                     </div>
                 </th>
                 <th>
+                    @foreach ($totalPerid7 as $totpot3)
+                        @if ($totpot3->id_karyawan == $karyawan->id_karyawan)
+                            @php
+                                $tpot3 = $totpot3->totalpot2;
+                                $potongan_koprasiTwajib += $tpot3;
+                            @endphp
+                         @else
+                            @php
+                                $tpot3 = 0;
+                            @endphp
+                        @endif
+                    @endforeach
                     @foreach ($totalPerid3 as $totpot)
                         @if ($totpot->id_karyawan == $karyawan->id_karyawan)
                             @php
                                 $tpot = $totpot->totalpot;
-                                $total_gaji = $totaltun + $thr + $upahlembur + $koreksi - $tpot - $totalbpjs1;
-                                $potongan_koprasi += $tpot;
+                                $total_gaji = $totaltun + $thr + $upahlembur + $koreksi - $tpot - $tpot3 - $totalbpjs1;
+                                $potongan_koprasiwajib += $tpot;
                             @endphp
                         {{ $total_gaji }}
                         @endif
@@ -332,8 +352,12 @@
                                 $pph21 = $tpph->totalpot1;
                                 $totalpph21 += $pph21;
                             @endphp
-                        -{{ $pph21 }}
+                        @else
+                            @php
+                                $pph21 = 0;
+                            @endphp
                         @endif
+                        -{{ $pph21 }}
                     @endforeach
                 </th>
                 <th>
@@ -358,12 +382,22 @@
                 <td></td>
                 <td></td>
                 <td></td>
+                <td>
+                    <div style="display: flex;">
+                        <div>Bpjs Perusahaan = {{ $jumlahbpjs1 }}</div> 
+                        <div style="margin-left: 10px;">Bpjs Karyawan = {{ $jumlahbpjs2 }}</div>
+                    </div>
+                </td>
                 <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
-                <td></td>
-                <td>{{ $potongan_koprasi }}</td>
+                <td>
+                    @php
+                        $totalPotonganKoprasi = $potongan_koprasiwajib + $potongan_koprasiTwajib;
+                    @endphp
+                    {{ $totalPotonganKoprasi }}
+                </td>
                 <td></td>
                 <td>{{ $totalpph21 }}</td>
                 <td>{{ $pengeluaran }}</td>

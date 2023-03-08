@@ -43,6 +43,7 @@
                                         <option value="{{ $potongan->jenis }}">{{ $potongan->jenis }}</option>
                                         <option >--Pilih Salah Satu--</option>
                                         <option value="Wajib">Wajib</option>
+                                        <option value="PPh 21">PPh 21</option>
                                         <option value="Tidak Wajib">Tidak Wajib</option>
                                     </select>
                                 </div>

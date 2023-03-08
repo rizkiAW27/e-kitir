@@ -217,7 +217,7 @@
                                     @else
                                         @foreach ($potongans as $potongan)
                                         <tr>
-                                            @if ($id_karyawan == $potongan->id_karyawan && $potongan->jenis == "Tidak Wajib")
+                                            @if ($id_karyawan == $potongan->id_karyawan && $potongan->jenis == "PPh 21")
                                                 <td>{{ $potongan->nama_potongan }}</td>
                                                 @php 
                                                     $hasil_rupiah5 = number_format($potongan->nilai_potongan,0,',','.');

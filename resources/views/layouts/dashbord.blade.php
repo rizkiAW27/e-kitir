@@ -22,10 +22,10 @@
     @include('sweetalert::alert')
     <div class="d-flex">
         <div class="bg-white dashbord">
-            <a href="{{ route('home') }}">
-                <img src="{{ asset('images/logo.jpg') }}" class="size-logo">
-            </a>
-            <hr>
+                <a href="{{ route('home') }}">
+                    <img src="{{ asset('images/logo.jpg') }}" class="size-logo img-fluid">
+                </a>
+                <hr>
             <ul class="navbar-nav ms-auto">
                 @if (Auth::user()->hak_akses == 'hrd')
                     <li class="nav-item">
@@ -35,23 +35,23 @@
                         <a class="nav-link" href="{{ route('dataKaryawan_lembur') }}">Data Karyawan Lembur</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('kitir_karyawan') }}" target="_blank" style="color: black">Data E-kitir</a>
+                        <a class="nav-link" href="{{ route('kitir_karyawan') }}" target="_blank">Data E-kitir</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('rekap_lembur') }}" style="color: black">Data Overtime</a>
+                        <a class="nav-link" href="{{ route('rekap_lembur') }}">Data Overtime</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('profile') }}" style="color: black">Profile</a>
+                        <a class="nav-link" href="{{ route('profile') }}">Profile</a>
                     </li>
                 @elseif (Auth::user()->hak_akses == 'karyawan')
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('kitir_karyawan') }}" target="_blank" style="color: black">E-kitir</a>
+                        <a style="font-size: 3vw;" class="nav-link" href="{{ route('kitir_karyawan') }}" target="_blank">E-kitir</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('rekap_lembur') }}" style="color: black">Data Overtime</a>
+                        <a style="font-size: 3vw;" class="nav-link" href="{{ route('rekap_lembur') }}">Data Overtime</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('profile') }}" style="color: black">Profile</a>
+                        <a style="font-size: 3vw;" class="nav-link" href="{{ route('profile') }}">Profile</a>
                     </li>
                 @elseif(Auth::user()->hak_akses == 'super_admin')
                     <li class="nav-item">
@@ -118,7 +118,7 @@
                         <a class="nav-link" href="{{ route('dataKaryawan_lembur') }}">Data Karyawan Lembur</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('profile') }}" style="color: black">Profile</a>
+                        <a class="nav-link" href="{{ route('profile') }}">Profile</a>
                     </li>
                 @endif
             </ul>

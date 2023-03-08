@@ -16,12 +16,12 @@
                         <table class="table table-bordered table-striped mb-0">
                             <thead>
                               <tr>
-                                <td>No</td>
-                                <td>Nama</td>
-                                <td>Lembur 1</td>
-                                <td>Lembur 2</td>
-                                <td>Tanggal Lembur</td>
-                                <td>Aksi</td>
+                                <td style="font-size: 2vw;">No</td>
+                                <td style="font-size: 2vw;">Nama</td>
+                                <td style="font-size: 2vw;">Lembur 1</td>
+                                <td style="font-size: 2vw;">Lembur 2</td>
+                                <td style="font-size: 2vw;">Tanggal Lembur</td>
+                                <td style="font-size: 2vw;">Aksi</td>
                               </tr>
                             </thead>
                             <tbody>
@@ -33,24 +33,24 @@
                                 @endphp
                                 
                                 @foreach ($lemburs as $hasil)
-                                @if ($hasil->id_karyawan == Auth::user()->id_karyawan)
-                                <tr>
-                                    <td>{{ $no++ }}</td>
-                                    <td>{{ $hasil->ket_lembur }}</td>
-                                    <td>{{ $hasil->jam1 }} Jam</td>
-                                    <td>{{ $hasil->jam2 }} Jam</td>
-                                    <td>{{ $hasil->tgl_lembur }}</td>
-                                    <td>
-                                        <div class="d-flex justify-content-center">
-                                            <a href="{{ route('cetak_lembur') }}" style="color: black" target="_blank"><i class="bi bi-printer-fill"></i></a>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @php
-                                    $jam1 += $hasil->jam1;
-                                    $jam2 += $hasil->jam2;
-                                    $totalLembur = $jam1 + $jam2;
-                                @endphp 
+                                    @if ($hasil->id_karyawan == Auth::user()->id_karyawan)
+                                    <tr>
+                                        <td style="font-size: 2vw;">{{ $no++ }}</td>
+                                        <td style="font-size: 2vw;">{{ $hasil->ket_lembur }}</td>
+                                        <td style="font-size: 2vw;">{{ $hasil->jam1 }} Jam</td>
+                                        <td style="font-size: 2vw;">{{ $hasil->jam2 }} Jam</td>
+                                        <td style="font-size: 2vw;">{{ $hasil->tgl_lembur }}</td>
+                                        <td>
+                                            <div class="d-flex justify-content-center">
+                                                <a href="{{ route('cetak_lembur') }}" style="color: black" target="_blank"><i class="bi bi-printer-fill"></i></a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    @php
+                                        $jam1 += $hasil->jam1;
+                                        $jam2 += $hasil->jam2;
+                                        $totalLembur = $jam1 + $jam2;
+                                    @endphp 
                                 @else
                                 <tr>
                                     <td colspan="10" align="center">Tidak ada data</td>
@@ -60,9 +60,9 @@
                             </tbody>
                         </table>
                         <div>
-                            <div><span>Jumlah Jam Lembur 1 : {{ $jam1 }} Jam</span></div> 
-                            <div><span>Jumlah Jam Lembur 2 : {{ $jam2 }} Jam</span></div> 
-                            <div><span>Total Jam Lembur : {{ $totalLembur }} Jam</span></div>
+                            <div><span style="font-size: 2vw;">Jumlah Jam Lembur 1 : {{ $jam1 }} Jam</span></div> 
+                            <div><span style="font-size: 2vw;">Jumlah Jam Lembur 2 : {{ $jam2 }} Jam</span></div> 
+                            <div><span style="font-size: 2vw;">Total Jam Lembur : {{ $totalLembur }} Jam</span></div>
                         </div>
                     </div>
                 </div>

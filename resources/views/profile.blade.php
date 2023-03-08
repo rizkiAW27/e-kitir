@@ -29,11 +29,11 @@
                         @endforeach
                         @if ($id == Auth::user()->id)
                                 <div>
-                                    <img src="{{ asset('storage').'/'. $gambar }}" style="width: 80px; height: 90px;" class="img-fluid rounded-circle">
+                                    <img src="{{ asset('storage').'/'. $gambar }}" class="img-fluid rounded-circle">
                                 </div>
                             @else
                                 <div>
-                                    <img src="{{ asset('images/logo.jpg') }}" style="width: 80px; height: 90px;" class="img-fluid rounded-circle">
+                                    <img src="{{ asset('images/logo.jpg') }}" class="img-fluid rounded-circle">
                                 </div>
                         @endif
                     </div>
@@ -42,13 +42,13 @@
                         @csrf
                         <div class="d-flex justify-content-center">
                             <div class="col-md-5 ms-5 me-5">
-                                <div class="mb-1">
-                                    <label  class="form-label">Pilih Gambar</label>
-                                    <input type="file" class="form-control" name="image" required>
+                                <div class="form-group mb-1">
+                                    <label for="file">Pilih Gambar</label>
+                                    <input type="file" id="file" class="form-control-sm" name="image" required>
                                     <input type="hidden" class="form-control" name="id_user" value="{{ Auth::user()->id }}">
                                 </div>
-                                <button type="submit" class="btn btn-primary mt-2">Upload</button>
-                                <a href="{{ route('home') }}" class="btn btn-warning mt-2">Cancel</a>
+                                <button type="submit" class="btn btn-primary mt-2 btn-sm">Upload</button>
+                                <a href="{{ route('home') }}" class="btn btn-warning mt-2 btn-sm">Cancel</a>
                             </div>
                         </div>
                     </form>  

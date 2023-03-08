@@ -46,12 +46,20 @@
                     </div>
                 </div>
             </div>
+        @else
+            <div  class="col-md-12 bg-light mb-4">
+                <div class="d-flex justify-content-center p-3">
+                    <div class="d-flex justify-content-center p-4">
+                        <span style="font-size: 2vw;"> welcome back {{ Auth::user()->email }}</span>
+                    </div>
+                </div>
+            </div>
         @endif
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
                     <div class="d-flex justify-content-center mb-4">
-                        <img src="{{ asset('images/logo.jpg') }}" class="rounded-circle">
+                        <img src="{{ asset('images/logo.jpg') }}" class="rounded-circle img-fluid">
                     </div>
                 </div>
                 <div class="card-body">
@@ -62,7 +70,7 @@
                     @endif
 
                     <div class="d-flex justify-content-center">
-                        <center><h3>Selamat Datang di Aplikasi E-kitir PT. Cahaya Mulia Persada Nusa</h3></center>
+                        <center><h3 style="font-size: 3vw;">Selamat Datang di Aplikasi E-kitir PT. Cahaya Mulia Persada Nusa</h3></center>
                     </div>
                 </div>
             </div>

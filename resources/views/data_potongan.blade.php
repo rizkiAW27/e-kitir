@@ -81,13 +81,15 @@
                 <div class="card-body">
                     <div class="table">
                         <div class="d-flex">
-                            <form action="{{ route('storeDataPotongan') }}" method="post">
-                                @csrf
-                                <div class="input-group">
-                                    <input type="text" class="form-control" name="data_potongan" placeholder="tambah data potongan">
-                                    <button class="btn btn-outline-secondary" type="submit" >Tambah</button>
-                                </div> 
-                            </form>     
+                            @if (Auth::user()->hak_akses == "super_admin")
+                                <form action="{{ route('storeDataPotongan') }}" method="post">
+                                    @csrf
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="data_potongan" placeholder="tambah data potongan">
+                                        <button class="btn btn-outline-secondary" type="submit" >Tambah</button>
+                                    </div> 
+                                </form>     
+                            @endif
                         </div>
                         <div class="table-wrapper-scroll-y my-custom-scrollbar">
                             <table class="table table-bordered table-striped mb-0">

@@ -74,7 +74,7 @@
                     @php
                         $no = 1;
                         $hasil_rupiah = 0;
-                        $date = $tgl2;
+                        $date = $date2;
                         $datetime = DateTime::createFromFormat('Y-m-d', $date);
                         $gp = 0;
                         $totaltun = 0;
@@ -87,6 +87,8 @@
                         $jlhtotalgaji = 0;
                         $thr = 0;
                         $tpot = 0;
+                        $tpot1 = 0;
+                        $Twajib = 0;
                         $koreksi = 0;
                         $pph21 = 0;
                         $tbpjs1 = 0;
@@ -96,6 +98,7 @@
                         $total_gaji = 0;
                         $total_gajibersih = 0;
                         $pengeluaran = 0;
+                        $hasil_rupiah = 0;
                         $dbpendapatan = DB::table('pendapatans')->get();
                     @endphp
                     @if ($karyawans->count() > 0)
@@ -161,26 +164,39 @@
                                         $jlh = $jam1 + $jam2;
                                         $upahlembur = floor((($total1 + $gp) * $jlh) / 173);
                                     @endphp
+                                @else 
+                                    @php
+                                        $upahlembur = 0;
+                                    @endphp
                                 @endif
                             @endforeach  
-                            @foreach ($totalPerid3 as $totpot)
-                                @if ($totpot->id_karyawan == $karyawan->id_karyawan)
+                            @foreach ($totalPerid6 as $totalpot1)
+                                @if ($totalpot1->id_karyawan == $karyawan->id_karyawan)
                                     @php
-                                        $tpot = $totpot->totalpot;
-                                        $total_gaji = $totaltun + $thr + $upahlembur + $koreksi - $tpot - $totalbpjs1;
+                                        $Twajib = $totalpot1->totalpot1;
+                                    @endphp
+                                @else
+                                    @php
+                                        $Twajib = 0;
                                     @endphp
                                 @endif
                             @endforeach
-                            @foreach ($totalPerid6 as $tpph)
-                                @if ($tpph->id_karyawan == $karyawan->id_karyawan)
+                            @foreach ($totalPerid7 as $tpotongan)
+                                @if ($tpotongan->id_karyawan == $karyawan->id_karyawan)
                                     @php
-                                        $pph21 = $tpph->totalpot1;
+                                            $pph21 = $tpotongan->totalpot2;
+                                    @endphp
+                                @else
+                                    @php
+                                            $pph21 = 0;
                                     @endphp
                                 @endif
                             @endforeach
-                            @foreach ($totalPerid3 as $totpot)
-                                @if ($totpot->id_karyawan == $karyawan->id_karyawan)
+                            @foreach ($totalPerid3 as $totalpot)
+                                @if ($totalpot->id_karyawan == $karyawan->id_karyawan)
                                     @php
+                                        $tpot = $totalpot->totalpot;
+                                        $total_gaji = $totaltun + $thr + $upahlembur + $koreksi - $tpot - $Twajib - $totalbpjs1;
                                         $total_gajibersih = $total_gaji - $pph21;
                                         $pengeluaran += $total_gajibersih;
                                     @endphp
@@ -192,16 +208,19 @@
                                 <td>{{ $karyawan->nama_bank }}</td>
                                 <td>{{ $karyawan->norek }}</td>
                                 <td>{{ $karyawan->namaPem_bank }}</td>
-                                <td>{{ $total_gajibersih }}</td>
+                                @php 
+                                    $hasil_rupiah = number_format($total_gajibersih,0,',','.');
+                                @endphp
+                                <td>{{ $hasil_rupiah }}</td>
                                 <td>
                                     {{ $datetime->format('d F Y') }}
                                 </td>
                             </tr>
                         @endforeach
                     @else
-                            <tr>
-                                <td colspan="10" align="center">Tidak ada data</td>
-                            </tr>
+                    <tr>
+                        <td colspan="10" align="center">Tidak ada data</td>
+                    </tr>
                     @endif
                 </tbody>
             </table>

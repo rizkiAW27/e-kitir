@@ -28,7 +28,7 @@
                                     <label  class="form-label">Jenis</label>
                                     <select name="jenis" class="form-select">
                                         <option selected>--Pilih Salah Satu--</option>
-                                        <option value="Pnedapatan Tidak Tetap">Pendapatan Tidak Tetap</option>
+                                        <option value="Pendapatan Tidak Tetap">Pendapatan Tidak Tetap</option>
                                         <option value="Tunjangan Tetap">Tunjangan Tetap</option>
                                         <option value="Tunjangan Tidak Tetap">Tunjangan Tidak Tetap</option>
                                         <option value="Perusahaan">Perusahaan</option>

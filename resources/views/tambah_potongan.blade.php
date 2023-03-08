@@ -42,6 +42,7 @@
                                     <select name="jenis" class="form-select">
                                         <option selected>--Pilih Salah Satu--</option>
                                         <option value="Wajib">Wajib</option>
+                                        <option value="PPh 21">PPh 21</option>
                                         <option value="Tidak Wajib">Tidak Wajib</option>
                                     </select>
                                 </div>
