@@ -57,6 +57,11 @@
                                             $hasil_rupiah = $pendapatan->nilai_pendapatan;
                                         @endphp
                                         <td>{{ $hasil_rupiah }} %</td>
+                                    @elseif ($pendapatan->nilai_pendapatan < 0)
+                                        @php 
+                                            $hasil_rupiah = number_format($pendapatan->nilai_pendapatan,0,',','.');
+                                        @endphp
+                                        <td>Rp. {{ $hasil_rupiah }}</td>
                                     @else
                                         <td>{{ $pendapatan->nilai_pendapatan }}</td>
                                     @endif

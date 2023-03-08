@@ -196,12 +196,26 @@
                                     $id_karyawan = $karyawan->id_karyawan;
                                     $nilaiPotongan = 0;
                                     $nilaiPot = 0;
+                                    $nilaipot2 = 0;
+                                    $nilaipph21 = 0;
                                     $koreksi = 0;
                                     $nilaikoreksi = 0;
-                                    $pots = DB::table('potongans')->get();
                                 @endphp
-                                @foreach ($pots as $pot)
-                                    @if ($pot->jenis == 'Wajib' || $pot->jenis == 'Tidak Wajib')
+                                @foreach ($potongans as $pot)
+                                    @if ($pot->jenis == "Wajib")
+                                        <tr>
+                                            @if ($id_karyawan == $pot->id_karyawan && $pot->nilai_potongan > 0)
+                                                <td>{{ $pot->nama_potongan }}</td>
+                                                @php 
+                                                    $hasil_rupiah6 = number_format($pot->nilai_potongan,0,',','.');
+                                                @endphp
+                                                <td>Rp. {{ $hasil_rupiah6 }}</td>
+                                                @php
+                                                    $nilaipot2 += $pot->nilai_potongan;
+                                                @endphp
+                                            @endif
+                                        </tr>
+                                    @elseif ($pot->jenis == 'Tidak Wajib')
                                         <tr>
                                             @if ($id_karyawan == $pot->id_karyawan && $pot->nilai_potongan > 0)
                                                 <td>{{ $pot->nama_potongan }}</td>
@@ -210,27 +224,28 @@
                                                 @endphp
                                                 <td>Rp. {{ $hasil_rupiah4 }}</td>
                                                 @php
-                                                    $nilaiPot += $pot->nilai_potongan; 
+                                                    $nilaiPot += $pot->nilai_potongan;
                                                 @endphp
                                             @endif
                                         </tr>
-                                    @else
-                                        @foreach ($potongans as $potongan)
+                                    @elseif ($pot->jenis == 'PPh 21')
                                         <tr>
-                                            @if ($id_karyawan == $potongan->id_karyawan && $potongan->jenis == "PPh 21")
-                                                <td>{{ $potongan->nama_potongan }}</td>
-                                                @php 
-                                                    $hasil_rupiah5 = number_format($potongan->nilai_potongan,0,',','.');
+                                            @if ($id_karyawan == $pot->id_karyawan && $pot->nilai_potongan > 0)
+                                                <td>{{ $pot->nama_potongan }}</td>
+                                                @php
+                                                    $hasil_rupiah5 = number_format($pot->nilai_potongan,0,',','.');
                                                 @endphp
                                                 <td>Rp. {{ $hasil_rupiah5 }}</td>
                                                 @php
-                                                    $nilaiPotongan += $potongan->nilai_potongan + $nilaiPot; 
+                                                    $nilaipph21 += $pot->nilai_potongan;
                                                 @endphp
                                             @endif
                                         </tr>
-                                        @endforeach
                                     @endif
                                 @endforeach
+                                @php
+                                    $nilai_potongan = $nilaiPot + $nilaipot2 + $nilaipph21;
+                                @endphp
                                 @php
                                     $total = 0;
                                     $hasil = 0;
@@ -315,14 +330,14 @@
                                     <th style="10rem"></th>
                                 </tr>
                             </thead>
-                                @if ($nilaiPotongan == 0)
+                                @if ($nilai_potongan == 0)
                                     @php
                                         $totalPotongan = $nilaiPot + $nilaiTun - $koreksi;
                                         $hasil_rupiah10 = number_format($totalPotongan,0,',','.');
                                     @endphp
                                 @else
                                     @php
-                                        $totalPotongan = $nilaiPotongan + $nilaiTun;
+                                        $totalPotongan = $nilai_potongan + $nilaiTun;
                                         $hasil_rupiah10 = number_format($totalPotongan,0,',','.');
                                     @endphp
                                 @endif

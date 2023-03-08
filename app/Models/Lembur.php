@@ -16,4 +16,7 @@ class Lembur extends Model
         'jam2',
         'tgl_lembur',
     ];
+    public function karyawan(){
+        return $this->belongsTo(Karyawan::class);
+    }
 }

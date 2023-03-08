@@ -164,10 +164,6 @@
                                         $jlh = $jam1 + $jam2;
                                         $upahlembur = floor((($total1 + $gp) * $jlh) / 173);
                                     @endphp
-                                @else 
-                                    @php
-                                        $upahlembur = 0;
-                                    @endphp
                                 @endif
                             @endforeach  
                             @foreach ($totalPerid6 as $totalpot1)

@@ -93,7 +93,7 @@ class PendapatanController extends Controller
         $gajis = Gaji::all();
         $pendapatans = Pendapatan::all();
         $lemburans = Lembur::whereBetween('created_at', [$tgl1, $tgl2])->latest()->get();
-        $potongans = Potongan::whereBetween('created_at', [$tgl1, $tgl2])->latest()->get();
+        $potongans = Potongan::all();
 
         return view('data_ekitir', compact('karyawan', 'pendapatans', 'gajis', 'lemburans', 'potongans'));
        
@@ -116,7 +116,7 @@ class PendapatanController extends Controller
         $gajis = Gaji::all();
         $pendapatans = Pendapatan::all();
         $lemburans = Lembur::whereBetween('created_at', [$tgl1, $tgl2])->latest()->get();
-        $potongans = Potongan::whereBetween('created_at', [$tgl1, $tgl2])->latest()->get();
+        $potongans = Potongan::all();
 
         if($karyawans == []){
             return redirect()->back();
@@ -135,8 +135,7 @@ class PendapatanController extends Controller
 
     public function cari3(Request $request){
         $cari3 = $request->cari3;
-        // $pendapatan = Pendapatan::join('karyawans', 'karyawans.id_karyawan', '=', 'pendapatans.id_karyawan')->join('gajis', 'gajis.kode', '=', 'pendapatans.kode_tunjangan')->get(['pendapatans.*', 'karyawans.nama', 'gajis.nama_pendapatan']);
-        $pendapatans = Pendapatan::where('id_karyawan', 'like', "%".$cari3."%")->orwhere('kode_tunjangan', 'like', "%".$cari3."%")->paginate();
+        $pendapatans = Pendapatan::join('karyawans', 'karyawans.id_karyawan', '=', 'pendapatans.id_karyawan')->where('karyawans.id_karyawan', 'like', "%".$cari3."%")->orwhere('pendapatans.id_karyawan', 'like', "%".$cari3."%")->get();
         // dd($gajis);
         return view('data_pendapatan', compact('pendapatans'));
     }

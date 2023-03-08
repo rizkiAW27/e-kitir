@@ -35,7 +35,11 @@
     height: 400px;
     overflow: auto;
     font-size: 12px;
-    }
-    .table-wrapper-scroll-y {
+    color: black;
+}
+.my-custom-scrollbar tr td{
+    color: black;
+}
+.table-wrapper-scroll-y {
     display: block;
  }

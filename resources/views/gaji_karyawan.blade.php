@@ -44,6 +44,7 @@
         $jlhtotalgaji = 0;
         $thr = 0;
         $tpot = 0;
+        $tpot3 = 0;
         $koreksi = 0;
         $pph21 = 0;
         $tbpjs1 = 0;
@@ -285,10 +286,6 @@
                                 <div style="border: 1px solid #999; padding: 2px; width: 18px;">{{ $jam1 }}</div>
                                 <div style="border: 1px solid #999; padding: 2px; width: 18px;">{{ $jam2 }}</div>
                                 <div style="border: 1px solid #999; padding: 2px; width: 30px;">{{ $upahlembur }}</div>
-                            @else
-                                @php
-                                    $upahlembur = 0;
-                                @endphp
                             @endif
                         @endforeach    
                     </div>

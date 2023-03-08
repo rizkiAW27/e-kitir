@@ -23,4 +23,7 @@ class Karyawan extends Model
         'namaPem_bank',
         'status_ttd',
     ];
+    public function lemburs(){
+        return $this->hasMany(Karyawan::class);
+    }
 }
